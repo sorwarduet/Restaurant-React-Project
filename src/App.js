@@ -1,7 +1,14 @@
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import './App.css';
-function App() {
+import MainComponent from './components/MainComponent';
+
+const App = () => {
   return (
-    <div className="App">
+    <div>
+      <BrowserRouter>
+          <MainComponent/>
+      </BrowserRouter>
      
     </div>
   );
