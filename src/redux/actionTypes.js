@@ -1,0 +1,6 @@
+export const ADD_COMMANT= 'ADD_COMMANT';
+export const LOAD_FOODS= 'LOAD_FOODS';
+export const LOADING_FOODS= 'LOADING_FOODS';
+
+export const LOAD_COMMANTS= 'LOAD_COMMANTS';
+export const LOADING_COMMANTS= 'LOADING_COMMANTS';

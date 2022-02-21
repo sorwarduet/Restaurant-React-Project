@@ -57,6 +57,12 @@ class Navigation extends Component{
                                 Contact
                           </Link>
                         </NavItem>
+
+                        <NavItem>
+                          <Link className="nav-link"  to="/contact-form">
+                                Contact Form
+                          </Link>
+                        </NavItem>
                     </Nav>
                    
                     </Collapse>

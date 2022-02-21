@@ -1,14 +1,36 @@
 import { Component } from "react";
+import { connect } from 'react-redux';
 import { Button, CardColumns, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { commants } from '../../data/commants';
-import { foods } from '../../data/foods';
+import { addCommant, fetchCommants, fetchFoods } from "../../redux/createActions";
+// import { commants } from '../../data/commants';
+// import { foods } from '../../data/foods';
 import ItemDetails from "./ItemDetails";
+import Loading from "./Loading";
 import MenuItem from "./MenuItem";
+
+
+const mapStateProps=(state)=>{
+   
+    return {
+        foods: state.foods,
+        commants: state.commants
+    }
+}
+
+const mapDispatchToProps=dispatch =>{
+    return{
+        addCommant: (foodId, author, rating,  commant)=> 
+        dispatch(addCommant(foodId, author, rating,  commant)),
+        fetchFoods: () => dispatch(fetchFoods()),
+        fetchCommants: ()=> dispatch(fetchCommants())
+    }
+}
+
 
 class Menu extends Component{
     state= {
-        foods: foods,
-        commants: commants,
+        // foods: foods,
+        // commants: commants,
         selectFood: null,
         openModel: false
        
@@ -26,7 +48,12 @@ class Menu extends Component{
         })
     }
 
-    
+    componentDidMount(){
+        this.props.fetchFoods();
+        this.props.fetchCommants();
+    }
+
+  
 
 
     render(){
@@ -35,18 +62,20 @@ class Menu extends Component{
         let food=null;
 
         if(this.state.selectFood!=null){
-            let commants = this.state.commants.filter(commant=>
+            let commants = this.props.commants.commants.filter(commant=>
                 commant.foodId===this.state.selectFood.id
             )
 
             food=<ItemDetails 
             item={this.state.selectFood}
             commants={commants}
+            addCommant={this.props.addCommant}
+            commantIsloading={this.props.commants.isLoading}
             
             />
         }
 
-       const foods=this.state.foods.map((item)=>{
+       const foods=this.props.foods.foods.map((item)=>{
             return(
                 <MenuItem 
                 item={item} 
@@ -57,34 +86,44 @@ class Menu extends Component{
             )
         })
 
-        return(
-        <div className="container">
-            <div className='row'>
-                <CardColumns className="my-3">
-                    {foods}
-                </CardColumns>
+        if(this.props.foods.isLoading){
+            return(
+                <Loading />
+            )
+        } else{
 
+            return(
+                <div className="container">
+                    <div className='row'>
+                        <CardColumns className="my-3">
+                            {foods}
+                        </CardColumns>
+        
+        
+                        <Modal isOpen={this.state.openModel}  toggle={this.toggleModel}>
+                            <ModalHeader
+                                close={<button className="close" onClick={this.toggleModel}>x</button>}
+                                toggle={this.toggleModel}
+                                >
+                                Food
+                            </ModalHeader>
+                            <ModalBody>
+                                {food}
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="info" onClick={this.toggleModel}>Close</Button>
+                            </ModalFooter>
+                        </Modal>
+                    
+                        </div>
+                    </div>
+                );
 
-                <Modal isOpen={this.state.openModel}  toggle={this.toggleModel}>
-                    <ModalHeader
-                        close={<button className="close" onClick={this.toggleModel}>x</button>}
-                        toggle={this.toggleModel}
-                        >
-                        Food
-                    </ModalHeader>
-                    <ModalBody>
-                        {food}
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="info" onClick={this.toggleModel}>Close</Button>
-                    </ModalFooter>
-                </Modal>
-            
-                </div>
-            </div>
-        );
+        }
+
+        
     }
 
 }
 
-export default Menu;
+export default connect(mapStateProps, mapDispatchToProps)(Menu);
