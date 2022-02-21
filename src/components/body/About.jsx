@@ -1,13 +1,8 @@
-import React from 'react';
+import React from "react";
 
-const About=()=>{
-    document.title="About"
-    return(
-        <div>
-
-        </div>
-    );
-}
+const About = () => {
+  document.title = "About";
+  return <div></div>;
+};
 
 export default About;
-
